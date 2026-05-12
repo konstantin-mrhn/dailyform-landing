@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DailyForm — AI трекер питания в Telegram</title>
+<meta name="description" content="Считай калории голосом, текстом или фото. AI-трекер питания и тренировок прямо в Telegram. 7 дней бесплатно.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f1729;
+  --orange:#FF5500;
+  --orange-light:#ff6a1f;
+  --white:#f0ede8;
+  --muted:#9a9890;
+  --card:#1a1f2e;
+  --border:#252d3d;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--navy);color:var(--white);line-height:1.6;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(15,23,41,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:0.75rem}
+.nav-logo img{height:36px;width:36px;border-radius:8px}
+.nav-logo span{font-size:18px;font-weight:700;color:var(--white)}
+.nav-cta{background:var(--orange);color:#fff;text-decoration:none;padding:0.5rem 1.25rem;border-radius:8px;font-size:14px;font-weight:600;transition:background 0.2s}
+.nav-cta:hover{background:var(--orange-light)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 1.5rem 4rem;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(255,85,0,0.08) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-block;background:rgba(255,85,0,0.12);border:1px solid rgba(255,85,0,0.3);color:var(--orange);font-size:13px;font-weight:600;padding:0.35rem 1rem;border-radius:20px;margin-bottom:1.5rem;letter-spacing:0.5px}
+.hero h1{font-size:clamp(2.2rem,6vw,4rem);font-weight:800;line-height:1.15;letter-spacing:-1px;margin-bottom:1.25rem;max-width:720px;margin-left:auto;margin-right:auto}
+.hero h1 span{color:var(--orange)}
+.hero p{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--muted);max-width:520px;margin:0 auto 2.5rem}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--orange);color:#fff;text-decoration:none;padding:0.875rem 2rem;border-radius:10px;font-size:16px;font-weight:700;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem}
+.btn-primary:hover{background:var(--orange-light);transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--white);text-decoration:none;padding:0.875rem 2rem;border-radius:10px;font-size:16px;font-weight:600;border:1px solid var(--border);transition:all 0.2s}
+.btn-secondary:hover{border-color:var(--orange);color:var(--orange)}
+.hero-screens{margin-top:4rem;display:flex;justify-content:center;align-items:flex-end;gap:1.5rem;flex-wrap:wrap}
+.hero-screen-wrap{display:flex;flex-direction:column;align-items:center;gap:1.25rem}
+.hero-screen-wrap img{width:240px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5);transition:transform 0.3s}
+.hero-screen-wrap:first-child img{transform:rotate(-4deg) translateY(20px)}
+.hero-screen-wrap:last-child img{transform:rotate(4deg) translateY(20px)}
+.hero-screen-wrap:first-child,.hero-screen-wrap:last-child{opacity:0.85}
+.hero-screen-label{font-size:0.95rem;color:var(--muted);text-align:center;max-width:200px;line-height:1.4;padding-top:0.5rem}
+.screen-placeholder{width:240px;height:420px;background:var(--card);border-radius:24px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;padding:1rem}
+@media(max-width:800px){
+  .hero-screen-wrap img{width:160px}
+  .hero-screen-wrap:first-child img,.hero-screen-wrap:last-child img{transform:none}
+  .hero-screen-wrap:first-child,.hero-screen-wrap:last-child{opacity:1}
+}
+
+/* HOW */
+.section{padding:5rem 1.5rem;max-width:1100px;margin:0 auto}
+.section-label{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:0.75rem}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-0.5px;margin-bottom:1rem}
+.section-sub{font-size:1.05rem;color:var(--muted);max-width:520px}
+.how-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;margin-top:3rem}
+.step{text-align:center;padding:2rem 1.5rem;background:var(--card);border-radius:16px;border:1px solid var(--border)}
+.step-icon{font-size:2.5rem;margin-bottom:1rem}
+.step h3{font-size:1.15rem;font-weight:700;margin-bottom:0.5rem}
+.step p{font-size:0.9rem;color:var(--muted);line-height:1.6}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+.feature{padding:1.75rem;background:var(--card);border-radius:16px;border:1px solid var(--border);transition:border-color 0.2s}
+.feature:hover{border-color:rgba(255,85,0,0.3)}
+.feature-icon{width:44px;height:44px;background:rgba(255,85,0,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem}
+.feature h3{font-size:1.05rem;font-weight:700;margin-bottom:0.4rem}
+.feature p{font-size:0.875rem;color:var(--muted);line-height:1.6}
+
+/* SCREENS SECTION */
+.screens-showcase{display:flex;justify-content:center;align-items:flex-end;gap:1.5rem;margin-top:3rem;flex-wrap:wrap}
+.screen-card{display:flex;flex-direction:column;align-items:center;gap:1.25rem}
+.screen-card img{width:240px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5)}
+.screen-card:first-child img{transform:rotate(-4deg) translateY(20px)}
+.screen-card:last-child img{transform:rotate(4deg) translateY(20px)}
+.screen-card:first-child,.screen-card:last-child{opacity:0.85}
+.screen-card-label{font-size:0.95rem;color:var(--muted);text-align:center;max-width:220px;line-height:1.4;padding-top:0.5rem}
+@media(max-width:800px){
+  .screen-card img{width:160px}
+  .screen-card:first-child img,.screen-card:last-child img{transform:none}
+  .screen-card:first-child,.screen-card:last-child{opacity:1}
+}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem;max-width:700px;margin-left:auto;margin-right:auto}
+.plan{padding:2rem;background:var(--card);border-radius:20px;border:1px solid var(--border)}
+.plan.featured{border-color:var(--orange);position:relative}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:0.25rem 0.875rem;border-radius:20px;letter-spacing:0.5px;white-space:nowrap}
+.plan-name{font-size:1rem;font-weight:600;color:var(--muted);margin-bottom:0.5rem}
+.plan-price{font-size:2.5rem;font-weight:800;letter-spacing:-1px;margin-bottom:0.25rem}
+.plan-price span{font-size:1rem;font-weight:400;color:var(--muted)}
+.plan-note{font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem}
+.plan-features{list-style:none;margin-bottom:1.75rem}
+.plan-features li{font-size:0.9rem;padding:0.4rem 0;color:var(--muted);display:flex;align-items:center;gap:0.5rem}
+.plan-features li::before{content:'✓';color:var(--orange);font-weight:700}
+.plan-btn{display:block;text-align:center;text-decoration:none;padding:0.875rem;border-radius:10px;font-size:15px;font-weight:700;transition:all 0.2s}
+.plan-btn-primary{background:var(--orange);color:#fff}
+.plan-btn-primary:hover{background:var(--orange-light)}
+.plan-btn-outline{background:transparent;color:var(--white);border:1px solid var(--border)}
+.plan-btn-outline:hover{border-color:var(--orange);color:var(--orange)}
+
+/* CTA */
+.cta-section{text-align:center;padding:5rem 1.5rem;background:linear-gradient(to bottom,var(--navy),rgba(255,85,0,0.05),var(--navy))}
+.cta-section h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:1rem}
+.cta-section p{color:var(--muted);margin-bottom:2rem;font-size:1.05rem}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center;font-size:0.85rem;color:var(--muted)}
+footer a{color:var(--muted);text-decoration:none;transition:color 0.2s}
+footer a:hover{color:var(--orange)}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+
+@media(max-width:600px){
+  nav{padding:1rem}
+  .hero-btns{flex-direction:column;align-items:center}
+  .footer-inner{justify-content:center;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <!-- <img src="logo.png" alt="DailyForm"> -->
+    <span>DailyForm</span>
+  </div>
+  <a href="https://t.me/DailyForm_AI_Bot" class="nav-cta">Попробовать бесплатно</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">7 дней бесплатно · Только Telegram</div>
+    <h1>AI-трекер питания,<br>который тебя <span>понимает</span></h1>
+    <p>Пиши, говори или фотографируй — бот сам посчитает калории и состав. Без таблиц и ручного ввода.</p>
+    <div class="hero-btns">
+      <a href="https://t.me/DailyForm_AI_Bot" class="btn-primary">▶ Начать бесплатно</a>
+      <a href="https://t.me/DailyFormAI" class="btn-secondary">Канал</a>
+    </div>
+    <div class="hero-screens">
+      <div class="hero-screen-wrap">
+        <img src="screen1.png" alt="Ввод еды текстом">
+        <div class="hero-screen-label">Написал — посчитано</div>
+      </div>
+      <div class="hero-screen-wrap">
+        <img src="screen2.png" alt="Голосовой ввод">
+        <div class="hero-screen-label">Надиктовал — готово</div>
+      </div>
+      <div class="hero-screen-wrap">
+        <img src="screen3.png" alt="Сводка за день">
+        <div class="hero-screen-label">Один tap — весь день</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <div class="section-label">Как это работает</div>
+  <div class="section-title">Никакого ручного ввода</div>
+  <div class="section-sub">Большинство трекеров заставляют искать еду в базе и вбивать граммы вручную. DailyForm работает иначе.</div>
+  <div class="how-steps" style="margin-top:3rem">
+    <div class="step">
+      <div class="step-icon">🎤</div>
+      <h3>Поел в машине — надиктовал</h3>
+      <p>Говоришь "съел куриную грудку с рисом" — бот распознаёт голос, считает калории и состав. 5 секунд. Не надо открывать базу еды и ничего искать.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">📸</div>
+      <h3>Фото этикетки или рецепта</h3>
+      <p>Сфотографировал состав на упаковке — AI сам считает. Нашёл рецепт в интернете — скриншот в бот. Ничего не вводишь вручную.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">✏️</div>
+      <h3>Написал как есть</h3>
+      <p>"Борщ, большая тарелка" — бот поймёт. Не нужно знать точный вес или граммы. Пишешь как говоришь — бот разбирается сам.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section">
+  <div class="section-label">Возможности</div>
+  <div class="section-title">Всё что нужно в одном боте</div>
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon">🏃</div>
+      <h3>Тренировки по кругам</h3>
+      <p>Загружаешь свою программу — бот ведёт тебя упражнение за упражнением. Нажал кнопку "следующее" — и никаких лишних действий. В конце сам спишет калории за тренировку.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <h3>Графики и динамика</h3>
+      <p>Калории, белки, жиры, углеводы, вес тела, вода — всё в графиках за неделю или месяц. Видно сразу, где провалы и где прогресс. Прямо в Telegram, без отдельного приложения.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🎯</div>
+      <h3>Цель под тебя</h3>
+      <p>Похудеть, держать вес или набрать — бот рассчитает лимит калорий на день под твой вес, рост и цель. И будет показывать сколько осталось после каждого приёма пищи.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💧</div>
+      <h3>Вода без забывалок</h3>
+      <p>Норма воды считается по твоему весу. Добавляешь стаканами прямо из меню. Бот напоминает если давно не пил — но не спамит.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🤔</div>
+      <h3>"Что ещё съесть?"</h3>
+      <p>Остался лимит калорий — спрашиваешь бота. Он смотрит сколько белков, жиров и углеводов уже было, и предлагает конкретно что добавить к следующему приёму.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">☀️</div>
+      <h3>Сводка за день</h3>
+      <p>Одна кнопка — и видишь всё: сколько съел, сколько выпил, были ли тренировки, сколько осталось до лимита. Не нужно ничего суммировать вручную.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<div class="section">
+  <div class="section-label">В деле</div>
+  <div class="section-title">Так это выглядит</div>
+  <div class="screens-showcase">
+    <div class="screen-card">
+      <img src="screen6.png" alt="Фото состава">
+      <div class="screen-card-label">Сфотографировал этикетку — бот считает сам</div>
+    </div>
+    <div class="screen-card">
+      <img src="screen4.png" alt="Отчёты WebApp">
+      <div class="screen-card-label">Графики за неделю и месяц</div>
+    </div>
+    <div class="screen-card">
+      <img src="screen5.png" alt="Тренировка по кругам">
+      <div class="screen-card-label">Бот ведёт по каждому кругу</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="section">
+  <div class="section-label">Тарифы</div>
+  <div class="section-title">Любой тариф — всегда полный доступ</div>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Месяц</div>
+      <div class="plan-price">290 <span>₽/мес</span></div>
+      <div class="plan-note">~9.7 ₽ в день</div>
+      <ul class="plan-features">
+        <li>Полный доступ к боту</li>
+        <li>КБЖУ текст, голос, фото</li>
+        <li>Тренировки и отчёты</li>
+        <li>Без ограничений</li>
+      </ul>
+      <a href="https://t.me/DailyForm_AI_Bot" class="plan-btn plan-btn-outline">Начать бесплатно</a>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">ВЫГОДНЕЕ</div>
+      <div class="plan-name">Год</div>
+      <div class="plan-price">2 990 <span>₽/год</span></div>
+      <div class="plan-note">~8.2 ₽ в день · экономия 14%</div>
+      <ul class="plan-features">
+        <li>Полный доступ к боту</li>
+        <li>КБЖУ текст, голос, фото</li>
+        <li>Тренировки и отчёты</li>
+        <li>Без ограничений</li>
+      </ul>
+      <a href="https://t.me/DailyForm_AI_Bot" class="plan-btn plan-btn-primary">Начать бесплатно</a>
+    </div>
+  </div>
+  <p style="margin-top:1.5rem;color:var(--muted);font-size:0.9rem">7 дней бесплатно после регистрации — карта не нужна</p>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Начни прямо сейчас</h2>
+  <p>7 дней бесплатно. Без карты. Прямо в Telegram.</p>
+  <a href="https://t.me/DailyForm_AI_Bot" class="btn-primary">▶ Открыть бота</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 DailyForm</span>
+    <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;justify-content:center">
+      <a href="mailto:dailyform@ya.ru">dailyform@ya.ru</a>
+      <a href="https://t.me/DailyFormAI">Канал</a>
+      <a href="https://mapping.technology/privacy">Политика конфиденциальности</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
