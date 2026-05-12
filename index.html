@@ -39,19 +39,28 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:fl
 .btn-primary:hover{background:var(--orange-light);transform:translateY(-1px)}
 .btn-secondary{background:transparent;color:var(--white);text-decoration:none;padding:0.875rem 2rem;border-radius:10px;font-size:16px;font-weight:600;border:1px solid var(--border);transition:all 0.2s}
 .btn-secondary:hover{border-color:var(--orange);color:var(--orange)}
-.hero-screens{margin-top:4rem;display:flex;justify-content:center;align-items:flex-end;gap:1.5rem;flex-wrap:wrap}
+.hero-screens{margin-top:4rem;display:flex;justify-content:center;align-items:flex-end;gap:2rem;flex-wrap:wrap}
 .hero-screen-wrap{display:flex;flex-direction:column;align-items:center;gap:1.25rem}
-.hero-screen-wrap img{width:240px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5);transition:transform 0.3s}
+.hero-screen-wrap img{width:300px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5);transition:transform 0.3s;cursor:pointer}
+.hero-screen-wrap img:hover{transform:scale(1.03) !important}
 .hero-screen-wrap:first-child img{transform:rotate(-4deg) translateY(20px)}
 .hero-screen-wrap:last-child img{transform:rotate(4deg) translateY(20px)}
 .hero-screen-wrap:first-child,.hero-screen-wrap:last-child{opacity:0.85}
-.hero-screen-label{font-size:0.95rem;color:var(--muted);text-align:center;max-width:200px;line-height:1.4;padding-top:0.5rem}
-.screen-placeholder{width:240px;height:420px;background:var(--card);border-radius:24px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;padding:1rem}
+.hero-screen-label{font-size:0.95rem;color:var(--muted);text-align:center;max-width:260px;line-height:1.4;padding-top:0.5rem}
+.screen-placeholder{width:300px;height:520px;background:var(--card);border-radius:24px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;padding:1rem}
 @media(max-width:800px){
-  .hero-screen-wrap img{width:160px}
+  .hero-screens{flex-direction:column;align-items:center;gap:2.5rem}
+  .hero-screen-wrap img{width:calc(100vw - 3rem)}
   .hero-screen-wrap:first-child img,.hero-screen-wrap:last-child img{transform:none}
   .hero-screen-wrap:first-child,.hero-screen-wrap:last-child{opacity:1}
 }
+
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.active{display:flex}
+.lightbox img{max-width:90vw;max-height:90vh;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.8)}
+.lightbox-close{position:absolute;top:1.5rem;right:1.5rem;color:#fff;font-size:2rem;cursor:pointer;opacity:0.7;line-height:1}
+.lightbox-close:hover{opacity:1}
 
 /* HOW */
 .section{padding:5rem 1.5rem;max-width:1100px;margin:0 auto}
@@ -73,15 +82,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:fl
 .feature p{font-size:0.875rem;color:var(--muted);line-height:1.6}
 
 /* SCREENS SECTION */
-.screens-showcase{display:flex;justify-content:center;align-items:flex-end;gap:1.5rem;margin-top:3rem;flex-wrap:wrap}
+.screens-showcase{display:flex;justify-content:center;align-items:flex-end;gap:2rem;margin-top:3rem;flex-wrap:wrap}
 .screen-card{display:flex;flex-direction:column;align-items:center;gap:1.25rem}
-.screen-card img{width:240px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5)}
+.screen-card img{width:300px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5);cursor:pointer;transition:transform 0.3s}
+.screen-card img:hover{transform:scale(1.03) !important}
 .screen-card:first-child img{transform:rotate(-4deg) translateY(20px)}
 .screen-card:last-child img{transform:rotate(4deg) translateY(20px)}
 .screen-card:first-child,.screen-card:last-child{opacity:0.85}
-.screen-card-label{font-size:0.95rem;color:var(--muted);text-align:center;max-width:220px;line-height:1.4;padding-top:0.5rem}
+.screen-card-label{font-size:0.95rem;color:var(--muted);text-align:center;max-width:260px;line-height:1.4;padding-top:0.5rem}
 @media(max-width:800px){
-  .screen-card img{width:160px}
+  .screens-showcase{flex-direction:column;align-items:center;gap:2.5rem}
+  .screen-card img{width:calc(100vw - 3rem)}
   .screen-card:first-child img,.screen-card:last-child img{transform:none}
   .screen-card:first-child,.screen-card:last-child{opacity:1}
 }
@@ -295,5 +306,30 @@ footer a:hover{color:var(--orange)}
   </div>
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.hero-screen-wrap img, .screen-card img').forEach(function(img) {
+    img.addEventListener('click', function() { openLightbox(this.src); });
+  });
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
 </body>
 </html>
