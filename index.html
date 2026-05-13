@@ -77,22 +77,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:fl
 .btn-primary:hover{background:var(--orange-light);transform:translateY(-1px)}
 .btn-secondary{background:transparent;color:var(--white);text-decoration:none;padding:0.875rem 2rem;border-radius:10px;font-size:16px;font-weight:600;border:1px solid var(--border);transition:all 0.2s}
 .btn-secondary:hover{border-color:var(--orange);color:var(--orange)}
+/* HERO SCREENS — desktop */
 .hero-screens{margin-top:4rem;display:flex;justify-content:center;align-items:flex-end;gap:2rem;flex-wrap:wrap}
 .hero-screen-wrap{display:flex;flex-direction:column;align-items:center;gap:1.25rem}
-.hero-screen-wrap img{width:300px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5);transition:transform 0.3s;cursor:pointer}
-.hero-screen-wrap img:hover{transform:scale(1.03) !important}
+.hero-screen-wrap img{width:300px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5)}
 .hero-screen-wrap:first-child img{transform:rotate(-4deg) translateY(20px)}
 .hero-screen-wrap:last-child img{transform:rotate(4deg) translateY(20px)}
 .hero-screen-wrap:first-child,.hero-screen-wrap:last-child{opacity:0.85}
 .hero-screen-label{font-size:0.95rem;color:var(--muted);text-align:center;max-width:260px;line-height:1.4;padding-top:0.5rem}
-.screen-placeholder{width:300px;height:520px;background:var(--card);border-radius:24px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;padding:1rem}
 
-/* LIGHTBOX */
-.lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;cursor:zoom-out}
-.lightbox.active{display:flex}
-.lightbox img{max-width:90vw;max-height:90vh;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.8)}
-.lightbox-close{position:absolute;top:1.5rem;right:1.5rem;color:#fff;font-size:2rem;cursor:pointer;opacity:0.7;line-height:1}
-.lightbox-close:hover{opacity:1}
+/* CAROUSEL */
+.carousel{position:relative;overflow:hidden;width:100%;touch-action:pan-y}
+.carousel-track{display:flex;transition:transform 0.35s ease}
+.carousel-slide{flex:0 0 100%;display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:0 1rem}
+.carousel-slide img{width:min(280px,calc(100vw - 4rem));border-radius:20px;border:1px solid var(--border);box-shadow:0 12px 40px rgba(0,0,0,0.5);pointer-events:none;user-select:none;-webkit-user-drag:none}
+.carousel-label{font-size:0.9rem;color:var(--muted);text-align:center}
+.carousel-dots{display:flex;justify-content:center;gap:0.5rem;margin-top:1rem}
+.carousel-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background 0.2s;cursor:pointer}
+.carousel-dot.active{background:var(--orange)}
+
+
 
 /* HOW */
 .section{padding:5rem 1.5rem;max-width:1100px;margin:0 auto}
@@ -113,11 +117,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:fl
 .feature h3{font-size:1.05rem;font-weight:700;margin-bottom:0.4rem}
 .feature p{font-size:0.875rem;color:var(--muted);line-height:1.6}
 
-/* SCREENS SECTION */
+/* SCREENS SECTION — desktop */
 .screens-showcase{display:flex;justify-content:center;align-items:flex-end;gap:2rem;margin-top:3rem;flex-wrap:wrap}
 .screen-card{display:flex;flex-direction:column;align-items:center;gap:1.25rem}
-.screen-card img{width:300px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5);cursor:pointer;transition:transform 0.3s}
-.screen-card img:hover{transform:scale(1.03) !important}
+.screen-card img{width:300px;border-radius:24px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.5)}
 .screen-card:first-child img{transform:rotate(-4deg) translateY(20px)}
 .screen-card:last-child img{transform:rotate(4deg) translateY(20px)}
 .screen-card:first-child,.screen-card:last-child{opacity:0.85}
@@ -169,13 +172,13 @@ footer a:hover{opacity:0.75}
   .btn-secondary{font-size:15px;padding:0.8rem 1.5rem;width:100%;text-align:center}
   .hero-btns{flex-direction:column;align-items:stretch;gap:0.75rem}
 
-  /* Скриншоты в hero — показываем только один */
-  .hero-screens{margin-top:2rem;gap:0;flex-direction:column;align-items:center}
-  .hero-screen-wrap:nth-child(2),.hero-screen-wrap:nth-child(3){display:none}
-  .hero-screen-wrap:first-child{opacity:1}
-  .hero-screen-wrap:first-child img{transform:none}
-  .hero-screen-wrap img{width:min(280px, calc(100vw - 3rem));border-radius:20px}
-  .hero-screen-label{font-size:0.9rem}
+  /* Hero screens — карусель на мобильном */
+  .hero-screens{display:none}
+  .hero-carousel{display:block;margin-top:2rem}
+  /* Screens showcase — карусель на мобильном */
+  .screens-showcase{display:none}
+  .screens-carousel{display:block;margin-top:2rem}
+  /* Карусели скрыты на десктопе */
 
   /* Sections */
   .section{padding:3rem 1.25rem}
@@ -194,14 +197,6 @@ footer a:hover{opacity:0.75}
   .feature{padding:1.25rem}
   .feature h3{font-size:1rem}
   .feature p{font-size:0.875rem}
-
-  /* Screens showcase — 1 скрин */
-  .screens-showcase{flex-direction:column;align-items:center;gap:2rem;margin-top:2rem}
-  .screen-card:nth-child(2),.screen-card:nth-child(3){display:none}
-  .screen-card:first-child{opacity:1}
-  .screen-card:first-child img{transform:none}
-  .screen-card img{width:min(280px, calc(100vw - 3rem));border-radius:20px}
-  .screen-card-label{font-size:0.9rem}
 
   /* Pricing — 1 колонка */
   .pricing-grid{grid-template-columns:1fr;gap:1.25rem;margin-top:2rem}
@@ -255,6 +250,19 @@ footer a:hover{opacity:0.75}
       <div class="hero-screen-wrap">
         <img src="screen3.jpg" alt="Сводка за день">
         <div class="hero-screen-label">Один tap — весь день</div>
+      </div>
+    </div>
+    <!-- Карусель для мобильного -->
+    <div class="hero-carousel carousel" id="heroCarousel" style="display:none">
+      <div class="carousel-track" id="heroTrack">
+        <div class="carousel-slide"><img src="screen1.jpg" alt="Написал — посчитано"><div class="carousel-label">Написал — посчитано</div></div>
+        <div class="carousel-slide"><img src="screen2.jpg" alt="Надиктовал — готово"><div class="carousel-label">Надиктовал — готово</div></div>
+        <div class="carousel-slide"><img src="screen3.jpg" alt="Один tap — весь день"><div class="carousel-label">Один tap — весь день</div></div>
+      </div>
+      <div class="carousel-dots" id="heroDots">
+        <div class="carousel-dot active" onclick="goTo('hero',0)"></div>
+        <div class="carousel-dot" onclick="goTo('hero',1)"></div>
+        <div class="carousel-dot" onclick="goTo('hero',2)"></div>
       </div>
     </div>
   </div>
@@ -346,6 +354,19 @@ footer a:hover{opacity:0.75}
       <div class="screen-card-label">Бот ведёт по каждому кругу</div>
     </div>
   </div>
+  <!-- Карусель для мобильного -->
+  <div class="screens-carousel carousel" id="screensCarousel" style="display:none">
+    <div class="carousel-track" id="screensTrack">
+      <div class="carousel-slide"><img src="screen6.jpg" alt="Фото состава"><div class="carousel-label">Сфотографировал этикетку — бот считает сам</div></div>
+      <div class="carousel-slide"><img src="screen4.jpg" alt="Отчёты WebApp"><div class="carousel-label">Графики за неделю и месяц</div></div>
+      <div class="carousel-slide"><img src="screen5.jpg" alt="Тренировка по кругам"><div class="carousel-label">Бот ведёт по каждому кругу</div></div>
+    </div>
+    <div class="carousel-dots" id="screensDots">
+      <div class="carousel-dot active" onclick="goTo('screens',0)"></div>
+      <div class="carousel-dot" onclick="goTo('screens',1)"></div>
+      <div class="carousel-dot" onclick="goTo('screens',2)"></div>
+    </div>
+  </div>
 </div>
 
 <!-- PRICING -->
@@ -401,29 +422,47 @@ footer a:hover{opacity:0.75}
   </div>
 </footer>
 
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
-  <img id="lightbox-img" src="" alt="">
-</div>
-
 <script>
-function openLightbox(src) {
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox').classList.add('active');
-  document.body.style.overflow = 'hidden';
+// Карусель
+var carousels = {
+  hero: {track: null, dots: null, current: 0, total: 3, startX: 0},
+  screens: {track: null, dots: null, current: 0, total: 3, startX: 0}
+};
+
+function goTo(name, idx) {
+  var c = carousels[name];
+  c.current = idx;
+  c.track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  var dots = c.dots.querySelectorAll('.carousel-dot');
+  dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
 }
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('active');
-  document.body.style.overflow = '';
+
+function initCarousel(name, trackId, dotsId) {
+  var c = carousels[name];
+  c.track = document.getElementById(trackId);
+  c.dots = document.getElementById(dotsId);
+  var el = c.track.parentElement;
+  el.addEventListener('touchstart', function(e) { c.startX = e.touches[0].clientX; }, {passive:true});
+  el.addEventListener('touchend', function(e) {
+    var diff = c.startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0 && c.current < c.total - 1) goTo(name, c.current + 1);
+      else if (diff < 0 && c.current > 0) goTo(name, c.current - 1);
+    }
+  }, {passive:true});
 }
+
+function checkMobile() {
+  var isMobile = window.innerWidth <= 768;
+  document.getElementById('heroCarousel').style.display = isMobile ? 'block' : 'none';
+  document.getElementById('screensCarousel').style.display = isMobile ? 'block' : 'none';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.hero-screen-wrap img, .screen-card img').forEach(function(img) {
-    img.addEventListener('click', function() { openLightbox(this.src); });
-  });
-});
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeLightbox();
+  initCarousel('hero', 'heroTrack', 'heroDots');
+  initCarousel('screens', 'screensTrack', 'screensDots');
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
 });
 </script>
 </body>
