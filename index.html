@@ -164,13 +164,14 @@ footer a:hover{opacity:0.75}
   .nav-logo span{font-size:16px}
 
   /* Hero */
-  .hero{padding:5rem 1.25rem 3rem;min-height:auto;align-items:flex-start}
-  .hero-badge{font-size:12px;padding:0.3rem 0.75rem;margin-bottom:1rem}
-  .hero h1{font-size:2rem;letter-spacing:-0.5px;margin-bottom:1rem}
-  .hero p{font-size:1rem;margin-bottom:1.75rem}
-  .btn-primary{font-size:15px;padding:0.8rem 1.5rem;width:100%;justify-content:center}
-  .btn-secondary{font-size:15px;padding:0.8rem 1.5rem;width:100%;text-align:center}
-  .hero-btns{flex-direction:column;align-items:stretch;gap:0.75rem}
+  .hero{padding:5rem 1.25rem 3rem;min-height:auto;align-items:flex-start;width:100%}
+  .hero>div{width:100%;max-width:100%}
+  .hero-badge{font-size:12px;padding:0.3rem 0.75rem;margin-bottom:1rem;max-width:100%;white-space:normal;text-align:center}
+  .hero h1{font-size:1.9rem;letter-spacing:-0.5px;margin-bottom:1rem;max-width:100%}
+  .hero p{font-size:1rem;margin-bottom:1.75rem;max-width:100%}
+  .btn-primary{font-size:15px;padding:0.8rem 1rem;width:100%;justify-content:center;box-sizing:border-box}
+  .btn-secondary{font-size:15px;padding:0.8rem 1rem;width:100%;text-align:center;box-sizing:border-box}
+  .hero-btns{flex-direction:column;align-items:stretch;gap:0.75rem;width:100%}
 
   /* Hero screens — карусель на мобильном */
   .hero-screens{display:none}
@@ -423,7 +424,6 @@ footer a:hover{opacity:0.75}
 </footer>
 
 <script>
-// Карусель
 var carousels = {
   hero: {track: null, dots: null, current: 0, total: 3, startX: 0},
   screens: {track: null, dots: null, current: 0, total: 3, startX: 0}
@@ -431,6 +431,9 @@ var carousels = {
 
 function goTo(name, idx) {
   var c = carousels[name];
+  // бесконечный цикл
+  if (idx < 0) idx = c.total - 1;
+  if (idx >= c.total) idx = 0;
   c.current = idx;
   c.track.style.transform = 'translateX(-' + (idx * 100) + '%)';
   var dots = c.dots.querySelectorAll('.carousel-dot');
@@ -446,8 +449,7 @@ function initCarousel(name, trackId, dotsId) {
   el.addEventListener('touchend', function(e) {
     var diff = c.startX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 40) {
-      if (diff > 0 && c.current < c.total - 1) goTo(name, c.current + 1);
-      else if (diff < 0 && c.current > 0) goTo(name, c.current - 1);
+      goTo(name, diff > 0 ? c.current + 1 : c.current - 1);
     }
   }, {passive:true});
 }
